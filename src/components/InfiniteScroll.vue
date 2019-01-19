@@ -4,9 +4,11 @@
 
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
+        :key='index'
         :id='index.toString()'
         :component="item['component']"
         :componentProps="item['componentProps']"
+        :loading="item['loading']"
     />
 
 </div>
@@ -39,13 +41,13 @@ export default {
                     last = item
                 }
             }
-            this.$emit('onLastViewedItem', last.id)
+
+            if (last) { this.$emit('onLastViewedItem', last.id) }
         }, false)
     },
     computed: {
         scrollItems () {
-            const numLoadingItems = Math.max(this.numLoadingItems - this.dataList.length, 0)
-            const loadingItems = Array(numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
+            const loadingItems = Array(this.numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
             return this.dataList.concat(loadingItems)
         }
     },

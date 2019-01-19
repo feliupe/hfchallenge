@@ -2,7 +2,7 @@
 
 <div class="InfiniteScrollItem">
 
-    <span>{{id}}</span>
+    <span>{{id}}</span> {{componentProps.something}}
 
     <div v-if='loading'>Fetching data</div>
 
@@ -31,12 +31,6 @@ export default {
         loading: {
             type: Boolean,
             default: false
-        }
-    },
-    data () {
-        return {
-            componentFetchedProps: {},
-            propsFetched: false
         }
     }
 };
