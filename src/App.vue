@@ -1,29 +1,41 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<div id="app">
+
+    <InfiniteScroll
+        class='data-feed'
+        :dataList='infiniteScrollData'
+    />
+
+</div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+
+import InfiniteScroll from '@/components/InfiniteScroll.vue'
+
+import Post from '@/components/Post.vue'
+import Photo from '@/components/Photo.vue'
+
+export default {
+    components: {InfiniteScroll, Post},
+    data () {
+
+        return {
+            // tuple: (Component, fetchDataFunction)
+            infiniteScrollData: [
+                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
+                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))}
+            ]
+        }
     }
-  }
 }
+</script>
+
+<style scoped>
+
+.data-feed {
+    max-width: 500px;
+    border: blue 1px solid;
+}
+
 </style>
