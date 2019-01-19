@@ -4,9 +4,9 @@
 
     <span>{{id}}</span>
 
-    <div v-if='!propsFetched'>Fetching data</div>
+    <div v-if='loading'>Fetching data</div>
 
-    <component v-else :is='component'/>
+    <component v-else :is='component' v-bind='componentProps'/>
 
 </div>
 
@@ -24,9 +24,13 @@ export default {
             type: Object,
             default: () => null // maybe check here if is a vue component
         },
-        fetchComponentData: {
-            type: Function,
-            default: () => () => Promise.resolve()
+        componentProps: {
+            type: Object,
+            default: () => ({})
+        },
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
     data () {
@@ -34,12 +38,6 @@ export default {
             componentFetchedProps: {},
             propsFetched: false
         }
-    },
-    mounted () {
-        this.fetchComponentData().then((data) => {
-            this.componentFetchedProps = data
-            this.propsFetched = true
-        })
     }
 };
 </script>

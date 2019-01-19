@@ -6,7 +6,8 @@
     <InfiniteScroll
         ref='infiniteScroll'
         class='data-feed'
-        :dataList='infiniteScrollData'
+        :dataList='infiniteScrollDataGetter(page, count)'
+        :numLoadingItems='numLoadingItems'
         @onLastViewedItem='storeLastViewedItem'
     />
 
@@ -15,34 +16,23 @@
 
 <script>
 
+import {mapGetters} from 'vuex'
+
 import InfiniteScroll from '@/components/InfiniteScroll.vue'
 
-import Post from '@/components/Post.vue'
-import Photo from '@/components/Photo.vue'
-
 export default {
-    components: {InfiniteScroll, Post},
+    components: {InfiniteScroll},
     data () {
 
         return {
-            // tuple: (Component, fetchDataFunction)
-            infiniteScrollData: [
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))},
-                {component: Post, fetchComponentData: () => new Promise(res => setTimeout(res, 2000))},
-                {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))}
-            ]
+            count: 20,
+            numLoadingItems: 20
+        }
+    },
+    computed: {
+        ...mapGetters(['infiniteScrollDataGetter']),
+        page () {
+            return 1
         }
     },
     methods: {

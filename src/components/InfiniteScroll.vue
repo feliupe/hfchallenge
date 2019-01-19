@@ -3,10 +3,10 @@
 <div class="InfiniteScroll">
 
     <infinite-scroll-item
-        v-for='(data, index) in dataList'
+        v-for='(item, index) in scrollItems'
         :id='index.toString()'
-        :component="data['component']"
-        :fetchComponentData="data['fetchComponentData']"
+        :component="item['component']"
+        :componentProps="item['componentProps']"
     />
 
 </div>
@@ -25,9 +25,9 @@ export default {
             type: Array,
             default: () => []
         },
-        onLastViewedItem: {
-            type: Function,
-            default: () => () => {}
+        numLoadingItems: {
+            type: Number,
+            default: 0
         }
     },
     mounted () {
@@ -41,6 +41,13 @@ export default {
             }
             this.$emit('onLastViewedItem', last.id)
         }, false)
+    },
+    computed: {
+        scrollItems () {
+            const numLoadingItems = Math.max(this.numLoadingItems - this.dataList.length, 0)
+            const loadingItems = Array(numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
+            return this.dataList.concat(loadingItems)
+        }
     },
     methods: {
         isInViewPoint (el) {
