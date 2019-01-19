@@ -17,6 +17,8 @@
 
 <script>
 
+import throttle from 'lodash.throttle'
+
 import InfiniteScrollItem from '@/components/InfiniteScrollItem.vue'
 
 export default {
@@ -33,8 +35,9 @@ export default {
         }
     },
     mounted () {
-        // TODO: add throttling
-        this.$el.addEventListener('scroll', (event) => {
+        // TODO: work more on this to make the loading more smooth/pleasant
+        this.$el.addEventListener('scroll', throttle((event) => {
+            console.log('scrolling')
             var last
             for (var item of this.$children) {
                 if (this.isInViewPoint(item.$el)) {
@@ -43,7 +46,7 @@ export default {
             }
 
             if (last) { this.$emit('onLastViewedItem', last.id) }
-        }, false)
+        }, 1000), false)
     },
     computed: {
         scrollItems () {

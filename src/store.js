@@ -10,10 +10,14 @@ const POSTS_CHUNK_SIZE = 7
 const PHOTOS_CHUNK_SIZE = 3
 const ITEMS_CHUNK_SIZE = POSTS_CHUNK_SIZE + PHOTOS_CHUNK_SIZE
 
+function delay (data) {
+    return new Promise(res => setTimeout(() => res(data), 1000 + (Math.random() * 4000)))
+}
+
 function getChunk (data, page, size) {
     const start = page * size
     data.forEach((v, i) => v.something = i + v.something)
-    return data.slice(start, start + size)
+    return delay(data.slice(start, start + size))
 }
 
 function fakeData(len) {

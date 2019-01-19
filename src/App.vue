@@ -2,7 +2,8 @@
 <div id="app">
 
     lastViewedItemId: {{lastViewedItemId}}
-
+    numLoadingItems: {{numLoadingItems}}
+    debug: {{debug}}
     <button class='exit-button' @click='exitPage'>EXIT</button>
 
     <InfiniteScroll
@@ -31,11 +32,11 @@ export default {
             count: 20,
             numLoadingItems: 0,
             page: 0,
-            lastViewedItemId: -1
+            lastViewedItemId: -1,
+            debug: ''
         }
     },
     mounted () {
-        this.numLoadingItems = this.ITEMS_CHUNK_SIZE
         this.lastViewedItemId = parseInt(localStorage.getItem('lastViewedInfiniteScrollItem'))
         this.page = Math.floor(this.lastViewedItemId / this.ITEMS_CHUNK_SIZE)
         this.fetchPage(this.page).then(() => console.log('scrolling to into', this.lastViewedItemId))
@@ -51,7 +52,9 @@ export default {
             window.location.href="https://fb.com"
         },
         onLastViewedItem (itemId) {
+            this.debug = 'fired'
             if ((this.infiniteScrollData.length - itemId) < NUM_OFF_ITEMS_TO_LOAD_MORE) {
+                this.debug += 'fetching'
                 this.page = this.page + 1
                 this.fetchPage(this.page)
             }
@@ -60,6 +63,7 @@ export default {
             this.lastViewedItemId = parseInt(itemId)
         },
         fetchPage (page) {
+            this.numLoadingItems = this.ITEMS_CHUNK_SIZE
             return this.$store.dispatch('fetchInfiniteScrollData', {page})
                 .then(() => {
                     this.numLoadingItems = 0

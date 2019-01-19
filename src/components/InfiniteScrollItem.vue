@@ -2,7 +2,7 @@
 
 <div class="InfiniteScrollItem">
 
-    <span>{{id}}</span> {{componentProps.something}}
+    <span>id {{id}}</span>unique content: {{componentProps.something}}
 
     <div v-if='loading'>Fetching data</div>
 
