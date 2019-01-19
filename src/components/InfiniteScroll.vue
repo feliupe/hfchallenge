@@ -24,19 +24,22 @@ export default {
         dataList: {
             type: Array,
             default: () => []
+        },
+        onLastViewedItem: {
+            type: Function,
+            default: () => () => {}
         }
     },
     mounted () {
         // TODO: add throttling
         this.$el.addEventListener('scroll', (event) => {
-            console.log('scrool')
             var last
             for (var item of this.$children) {
                 if (this.isInViewPoint(item.$el)) {
                     last = item
                 }
             }
-            console.log(last.id)
+            this.$emit('onLastViewedItem', last.id)
         }, false)
     },
     methods: {

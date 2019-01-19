@@ -1,9 +1,13 @@
 <template>
 <div id="app">
 
+    <button class='exit-button' @click='exitPage'>EXIT</button>
+
     <InfiniteScroll
+        ref='infiniteScroll'
         class='data-feed'
         :dataList='infiniteScrollData'
+        @onLastViewedItem='storeLastViewedItem'
     />
 
 </div>
@@ -40,6 +44,15 @@ export default {
                 {component: Photo, fetchComponentData: () => new Promise(res => setTimeout(res, 1000))}
             ]
         }
+    },
+    methods: {
+        exitPage () {
+            window.location.href="https://fb.com"
+        },
+        storeLastViewedItem (itemId) {
+            console.log('oi ', itemId)
+            localStorage.setItem("lastViewedInfiniteScrollItem", itemId)
+        }
     }
 }
 </script>
@@ -54,6 +67,12 @@ export default {
     border: blue 1px solid;
 
     overflow-y: auto;
+}
+
+.exit-button {
+    position: absolute;
+    right: 12px;
+    top: 12px;
 }
 
 </style>
