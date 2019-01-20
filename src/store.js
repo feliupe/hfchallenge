@@ -35,6 +35,11 @@ const api = {
         get ({page}) {
             return axios.get('http://jsonplaceholder.typicode.com/photos').then(r => r.data)
         }
+    },
+    comments: {
+        get () {
+            return axios.get('http://jsonplaceholder.typicode.com/comments').then(r => r.data)
+        }
     }
 }
 
@@ -52,9 +57,19 @@ export default new Vuex.Store({
 
         // TODO: separate into modules
         posts: [],
-        photos: []
+        photos: [],
+        commentsByPostId: {}
     },
     mutations: {
+        setCommentsByPostId (state, {comments}) {
+            state.commentsByPostId = {}
+            comments.forEach(comment => {
+                if (!state.commentsByPostId[comment.postId]) {
+                    state.commentsByPostId[comment.postId] = []
+                }
+                state.commentsByPostId[comment.postId].push(comment)
+            })
+        },
         // should ideally set resources separately and page by page
         setResource (state, {resource, data}) {
             state[resource] = data
@@ -65,10 +80,14 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        fetchAllComments ({state, commit}) {
+            return api.comments.get().then(comments => commit('setCommentsByPostId', {comments}))
+        },
         fetchInfiniteScrollData ({state, commit, dispatch}, {page}) {
 
             function transformResource (dataList, component) {
                 return dataList.map(data => ({
+                    ...data,
                     componentProps: data,
                     component,
                     uniqueId: data.id + '-' + component.name,
@@ -110,7 +129,22 @@ export default new Vuex.Store({
 
     getters: {
         infiniteScrollDataGetter: (state) => (page, count) => {
-            return state.infiniteScrollData
+
+            // TODO: move transform functions here and remove the state
+            // Maybe create getters for each scroll type of item like:
+            // - scrollPostGetter (page) - join posts and comments
+            // - scrollPhotogetter (page)...
+            // For now I will join the post comments here.
+            const res = state.infiniteScrollData
+                .map(data => {
+                    const componentProps = {...data.componentProps, comments: state.commentsByPostId[data.id]}
+                    return data.component.name === 'Post' ?
+                        {...data, componentProps} :
+                        data
+                })
+
+            debugger
+            return res
         },
         infiniteScrollLoadingData: (state) => () => {
 

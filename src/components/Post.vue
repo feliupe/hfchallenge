@@ -2,12 +2,15 @@
 <div class='Post clearfix'>
 
     <img class='thumb' alt="">
+
     <div class='description'>
 
-        <!-- Post thumb -->
-
         <h1 :title='title' class='title'>{{title.slice(0, 40) + '...'}}</h1>
-        <div :title='body' class='body'>{{body.slice(0, 100) + '...'}}</div>
+        <div :title='body' class='body'>
+            {{body.slice(0, 100) + '...'}}
+
+        </div>
+        <div class='comments-section'>{{comments.length}} comments</div>
     </div>
 
 </div>
@@ -17,7 +20,7 @@
 export default {
     name: 'Post',
 
-    props: ['title', 'body']
+    props: ['title', 'body', 'comments']
 }
 </script>
 
@@ -25,17 +28,14 @@ export default {
 
 $thumb-width: 128px;
 
-.Post {
-    border: 1px solid green;
-}
-
-
 .thumb {
     width: $thumb-width;
     background-color: grey
 }
 
 .description {
+    position: relative;
+
     width:  calc(100% - #{$thumb-width});
     padding: calc(#{$default-padding} / 2);
 }
@@ -53,6 +53,14 @@ $thumb-width: 128px;
 
 .body {
     margin-top: 12px;
+    line-height: 1.4;
+}
+
+.comments-section {
+    position: absolute;
+    text-align: right;
+    bottom: 6px;
+    right: 12px;
 }
 
 </style>

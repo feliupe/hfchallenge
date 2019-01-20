@@ -4,7 +4,6 @@
 
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
-        :classes="item['classes']"
 
         :key='index'
         :index='index'
@@ -84,3 +83,11 @@ export default {
     }
 };
 </script>
+
+<style>
+
+.InfiniteScroll {
+    padding: 0 12px;
+}
+
+</style>

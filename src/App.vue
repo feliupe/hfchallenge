@@ -50,9 +50,14 @@ export default {
         }
     },
     mounted () {
-        this.lastLoadedPage = parseInt(localStorage.getItem('pageLastViewedInfiniteScrollItem')) || 0
-        this.scrollToItemId = localStorage.getItem('lastViewedInfiniteScrollItem')
-        this.fetchPage(this.lastLoadedPage).then(() => this.$refs.infiniteScroll.scrollToItem(this.scrollToItemId))
+        // load app required data
+        Promise.all([
+            this.$store.dispatch('fetchAllComments')
+        ]).then(() => {
+            this.lastLoadedPage = parseInt(localStorage.getItem('pageLastViewedInfiniteScrollItem')) || 0
+            this.scrollToItemId = localStorage.getItem('lastViewedInfiniteScrollItem')
+            this.fetchPage(this.lastLoadedPage).then(() => this.$refs.infiniteScroll.scrollToItem(this.scrollToItemId))
+        })
     },
     computed: {
         ...mapState(['ITEMS_CHUNK_SIZE']),
@@ -121,6 +126,7 @@ export default {
 
     .type-Photo {
         height: 200px;
+        padding: $default-padding;
     }
 }
 
@@ -132,7 +138,6 @@ export default {
 .data-feed {
     max-width: 500px;
     height: 100vh;
-    border: blue 1px solid;
 
     overflow-y: auto;
 }
