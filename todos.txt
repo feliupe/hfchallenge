@@ -1,0 +1,5 @@
+- load items on scrolling up
+- create policy to invalidate scrolling back to last viewed item?
+- test
+- lint & clean
+- figure out why it doesn't scroll all the way up for photos
