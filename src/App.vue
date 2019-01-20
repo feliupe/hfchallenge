@@ -1,9 +1,14 @@
 <template>
 <div id="app">
 
-    lastViewedItemId: {{lastViewedItemId}}
-    numLoadingItems: {{numLoadingItems}}
-    debug: {{debug}}
+    <div class='debug-panel'>
+        lastLoadedPage: {{lastLoadedPage}}
+        scrollToItemId: {{scrollToItemId}}
+        numLoadingItems: {{numLoadingItems}}
+        debug: {{debug}}
+        hasMore: {{hasMore}}
+    </div>
+
     <button class='exit-button' @click='exitPage'>EXIT</button>
 
     <InfiniteScroll
@@ -26,47 +31,65 @@ import InfiniteScroll from '@/components/InfiniteScroll.vue'
 const NUM_OFF_ITEMS_TO_LOAD_MORE = 3
 
 export default {
+    name: 'App',
     components: {InfiniteScroll},
     data () {
         return {
             count: 20,
             numLoadingItems: 0,
-            page: 0,
-            lastViewedItemId: -1,
-            debug: ''
+            lastLoadedPage: 0,
+            scrollToItemId: -1,
+            debug: '',
+            hasMore: true
         }
     },
     mounted () {
-        this.lastViewedItemId = parseInt(localStorage.getItem('lastViewedInfiniteScrollItem'))
-        this.page = Math.floor(this.lastViewedItemId / this.ITEMS_CHUNK_SIZE)
-        this.fetchPage(this.page).then(() => console.log('scrolling to into', this.lastViewedItemId))
+        this.lastLoadedPage = parseInt(localStorage.getItem('pageLastViewedInfiniteScrollItem')) || 0
+        this.scrollToItemId = localStorage.getItem('lastViewedInfiniteScrollItem')
+        this.fetchPage(this.lastLoadedPage).then(() => this.$refs.infiniteScroll.scrollToItem(this.scrollToItemId))
     },
     computed: {
         ...mapState(['ITEMS_CHUNK_SIZE']),
         infiniteScrollData() {
-            return this.$store.getters.infiniteScrollDataGetter(this.page, this.count)
+            return this.$store.getters.infiniteScrollDataGetter(this.lastLoadedPage, this.count)
         }
     },
     methods: {
         exitPage () {
             window.location.href="https://fb.com"
         },
-        onLastViewedItem (itemId) {
+        onLastViewedItem (indexLastViewed) {
             this.debug = 'fired'
-            if ((this.infiniteScrollData.length - itemId) < NUM_OFF_ITEMS_TO_LOAD_MORE) {
+
+            const closeToTheEdge = (this.infiniteScrollData.length - indexLastViewed) <= NUM_OFF_ITEMS_TO_LOAD_MORE
+            console.log(
+                `this.infiniteScrollData.length ${this.infiniteScrollData.length}\n`,
+                `indexLastViewed ${indexLastViewed}\n`,
+                `closeToTheEdge ${closeToTheEdge}\n`,
+                `has more ${this.hasMore}\n`
+            )
+            const notFetching = this.numLoadingItems === 0
+
+            if (closeToTheEdge && notFetching && this.hasMore) {
                 this.debug += 'fetching'
-                this.page = this.page + 1
-                this.fetchPage(this.page)
+                this.lastLoadedPage = this.lastLoadedPage + 1
+                console.error('FETCHING MORE')
+                this.fetchPage(this.lastLoadedPage)
             }
 
-            localStorage.setItem("lastViewedInfiniteScrollItem", itemId)
-            this.lastViewedItemId = parseInt(itemId)
+            const lastViewedItemPage = this.infiniteScrollData[indexLastViewed].originPage
+            const lastViewedItemId = this.infiniteScrollData[indexLastViewed].uniqueId
+
+            localStorage.setItem("pageLastViewedInfiniteScrollItem", lastViewedItemPage)
+            localStorage.setItem("lastViewedInfiniteScrollItem", lastViewedItemId)
+            this.scrollToItemId = lastViewedItemId
         },
         fetchPage (page) {
             this.numLoadingItems = this.ITEMS_CHUNK_SIZE
             return this.$store.dispatch('fetchInfiniteScrollData', {page})
-                .then(() => {
+                .then(({hasMore}) => {
                     this.numLoadingItems = 0
+                    this.hasMore = hasMore
                 })
         }
     }
@@ -91,4 +114,9 @@ export default {
     top: 12px;
 }
 
+.debug-panel {
+    position: absolute;
+    right: 200px;
+    top: 12px;
+}
 </style>

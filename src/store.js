@@ -21,7 +21,7 @@ function getChunk (data, page, size) {
 }
 
 function fakeData(len) {
-    return new Array(len).fill(0).map(() => ({something: 'aduashd'}))
+    return new Array(len).fill(0).map((_, i) => ({id: i, something: 'aduashd'}))
 }
 
 const api = {
@@ -40,7 +40,7 @@ const api = {
 export default new Vuex.Store({
     state: {
         infiniteScrollData: [],
-        ITEMS_CHUNK_SIZE: 20
+        ITEMS_CHUNK_SIZE
     },
     mutations: {
         setInfiniteScrollData (state, {page, data}) {
@@ -50,18 +50,24 @@ export default new Vuex.Store({
     },
     actions: {
         fetchInfiniteScrollData ({state, commit, dispatch}, {page}) {
-            function wrapDispatchWithComponent (promise, component) {
+            function wrapWithAdditionalData (promise, component) {
                 return promise.then(dataList => {
-                    return dataList.map(data => ({componentProps: data, component}))
+                    return dataList.map(data => ({
+                        componentProps: data,
+                        component,
+                        uniqueId: data.id + '-' + component.name
+                    }))
                 })
             }
 
             return Promise.all([
-                wrapDispatchWithComponent(dispatch('fetchPosts', {page}), Post),
-                wrapDispatchWithComponent(dispatch('fetchPhotos', {page}), Photo)
+                wrapWithAdditionalData(dispatch('fetchPosts', {page}), Post),
+                wrapWithAdditionalData(dispatch('fetchPhotos', {page}), Photo)
             ]).then((data) => {
                 data = data.reduce((previous, current) => previous.concat(current), [])
+                data.forEach(d => d.originPage = page)
                 commit('setInfiniteScrollData', {page, data})
+                return {hasMore: data.length > 0}
             })
         },
         fetchPosts (state, {page}){

@@ -1,10 +1,10 @@
 <template>
 
-<div class="InfiniteScrollItem">
+<div :class='uniqueId' class="InfiniteScrollItem">
 
-    <span>id {{id}}</span>unique content: {{componentProps.something}}
+    <span>uniqueId {{uniqueId}}</span>unique content: {{componentProps.something}}
 
-    <div v-if='loading'>Fetching data</div>
+    <template v-if='loading'>Fetching data</template>
 
     <component v-else :is='component' v-bind='componentProps'/>
 
@@ -17,7 +17,7 @@
 export default {
     name: "InfiniteScrollItem",
     props: {
-        id: {
+        uniqueId: {
             type: String
         },
         component: {
@@ -31,6 +31,9 @@ export default {
         loading: {
             type: Boolean,
             default: false
+        },
+        index: {
+            type: Number
         }
     }
 };
@@ -39,6 +42,8 @@ export default {
 <style scoped>
 
 .InfiniteScrollItem {
+    height: 300px; /* make various types */
+
     border: 1px red solid;
 }
 

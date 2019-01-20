@@ -5,7 +5,8 @@
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
         :key='index'
-        :id='index.toString()'
+        :index='index'
+        :uniqueId='item.uniqueId'
         :component="item['component']"
         :componentProps="item['componentProps']"
         :loading="item['loading']"
@@ -45,8 +46,8 @@ export default {
                 }
             }
 
-            if (last) { this.$emit('onLastViewedItem', last.id) }
-        }, 1000), false)
+            if (last && !last.loading) { this.$emit('onLastViewedItem', last.index) }
+        }, 1000, {'leading': false}), false)
     },
     computed: {
         scrollItems () {
@@ -55,6 +56,15 @@ export default {
         }
     },
     methods: {
+        scrollToItem (uniqueItemId) {
+            const el = this.$el.getElementsByClassName(uniqueItemId)
+            if (el.length === 0) {
+                console.info(`Element ${uniqueItemId} not found.`)
+               return
+            }
+            el[0].scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+            console.log('scrolling into item')
+        },
         isInViewPoint (el) {
             const bounding = el.getBoundingClientRect()
             return (
