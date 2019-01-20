@@ -8,6 +8,8 @@
         hasMore: {{hasMore}}
     </div>
 
+    <button class='reset-button' @click='resetStorage'>RESET STORAGE</button>
+
     <button class='exit-button' @click='exitPage'>EXIT</button>
 
     <InfiniteScroll
@@ -59,6 +61,11 @@ export default {
         }
     },
     methods: {
+        resetStorage () {
+            localStorage.setItem("pageLastViewedInfiniteScrollItem", 0)
+            localStorage.setItem("lastViewedInfiniteScrollItem", null)
+            location.reload()
+        },
         exitPage () {
             window.location.href="https://fb.com"
         },
@@ -69,10 +76,10 @@ export default {
                 `this.infiniteScrollData.length ${this.infiniteScrollData.length}\n`,
                 `indexLastViewed ${indexLastViewed}\n`,
                 `closeToTheEdge ${closeToTheEdge}\n`,
-                `has more ${this.hasMore}\n`
+                `has more ${this.hasMore}\n` + this.loadingItems
             )
 
-            if (closeToTheEdge && this.loadingItems && this.hasMore) {
+            if (closeToTheEdge && !this.loadingItems && this.hasMore) {
                 this.lastLoadedPage = this.lastLoadedPage + 1
                 console.error('FETCHING MORE')
                 this.fetchPage(this.lastLoadedPage)
@@ -94,7 +101,7 @@ export default {
                     this.hasMore = hasMore
                 })
         },
-        getLoadingData(loadingItems) {
+        getLoadingData() {
             return this.loadingItems ? this.$store.getters.infiniteScrollLoadingData(this.ITEMS_CHUNK_SIZE) : []
         }
     }
@@ -128,9 +135,16 @@ export default {
 
     overflow-y: auto;
 }
+
 .exit-button {
     position: absolute;
     right: 12px;
+    top: 12px;
+}
+
+.reset-button {
+    position: absolute;
+    right: 64px;
     top: 12px;
 }
 
