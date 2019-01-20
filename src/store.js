@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -32,12 +33,13 @@ function fakeData(len) {
 const api = {
     posts: {
         get({page}) {
-            return getChunk(fakeData(30), page, POSTS_CHUNK_SIZE)
+            // return getChunk(fakeData(30), page, POSTS_CHUNK_SIZE)
+            return axios.get('http://jsonplaceholder.typicode.com/posts').then(r => r.data)
         }
     },
     photos: {
         get ({page}) {
-            return getChunk(fakeData(10), page, PHOTOS_CHUNK_SIZE)
+            return getChunk(fakeData(10), page, PHOTOS_CHUNK_SIZE).then(r => r.data)
         }
     }
 }
