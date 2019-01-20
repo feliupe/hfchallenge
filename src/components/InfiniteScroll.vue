@@ -69,7 +69,7 @@ export default {
                 console.info(`Element ${uniqueItemId} not found.`)
                return
             }
-            el[0].scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+            el[0].scrollIntoView({behavior: "smooth", block: "start"})
             console.log('scrolling into item')
         },
         isInViewPoint (el) {
