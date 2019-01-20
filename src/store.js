@@ -7,8 +7,8 @@ import Photo from '@/components/Photo.vue'
 
 Vue.use(Vuex)
 
-const POSTS_CHUNK_SIZE = 7
-const PHOTOS_CHUNK_SIZE = 3
+const POSTS_CHUNK_SIZE = 4
+const PHOTOS_CHUNK_SIZE = 2
 const ITEMS_CHUNK_SIZE = POSTS_CHUNK_SIZE + PHOTOS_CHUNK_SIZE
 
 const resourceChunkSizes = {
@@ -18,11 +18,6 @@ const resourceChunkSizes = {
 
 const placeholdersByComponentName = {
     Post: 'animated-background'
-}
-
-const classesByComponentName = {
-    Post: ['type-post'],
-    Photo: ['type-photo']
 }
 
 const api = {
@@ -91,7 +86,6 @@ export default new Vuex.Store({
                     componentProps: data,
                     component,
                     uniqueId: data.id + '-' + component.name,
-                    // classes: classesByComponentName[componentName]
                 }))
             }
 

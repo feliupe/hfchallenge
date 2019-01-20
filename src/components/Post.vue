@@ -30,7 +30,7 @@ $thumb-width: 128px;
 
 .thumb {
     width: $thumb-width;
-    background-color: grey
+    background-color: rgba(15, 122, 255, 0.14);
 }
 
 .description {
