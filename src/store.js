@@ -10,6 +10,11 @@ const POSTS_CHUNK_SIZE = 7
 const PHOTOS_CHUNK_SIZE = 3
 const ITEMS_CHUNK_SIZE = POSTS_CHUNK_SIZE + PHOTOS_CHUNK_SIZE
 
+const resourceChunkSizes = {
+    photos: PHOTOS_CHUNK_SIZE,
+    posts: POSTS_CHUNK_SIZE
+}
+
 function delay (data) {
     return new Promise(res => setTimeout(() => res(data), 1000 + (Math.random() * 4000)))
 }
@@ -37,12 +42,26 @@ const api = {
     }
 }
 
+// dummy check: check last item is present
+function checkAndGetIfCached(resource, data, page) {
+    const lastItemIndex = resourceChunkSizes[resource] * (page + 1) - 1
+    return !!data[lastItemIndex]
+}
+
 export default new Vuex.Store({
     state: {
         infiniteScrollData: [],
-        ITEMS_CHUNK_SIZE
+        ITEMS_CHUNK_SIZE,
+
+        // TODO: separate into modules
+        posts: [],
+        photos: []
     },
     mutations: {
+        // should ideally set resources separately and page by page
+        setResource (state, {resource, data}) {
+            state[resource] = data
+        },
         setInfiniteScrollData (state, {page, data}) {
             const start = page * ITEMS_CHUNK_SIZE
             state.infiniteScrollData.splice(start, data.length, ...data)
@@ -50,31 +69,42 @@ export default new Vuex.Store({
     },
     actions: {
         fetchInfiniteScrollData ({state, commit, dispatch}, {page}) {
-            function wrapWithAdditionalData (promise, component) {
-                return promise.then(dataList => {
-                    return dataList.map(data => ({
-                        componentProps: data,
-                        component,
-                        uniqueId: data.id + '-' + component.name
-                    }))
-                })
+
+            function transformResource (dataList, component) {
+                return dataList.map(data => ({
+                    componentProps: data,
+                    component,
+                    uniqueId: data.id + '-' + component.name
+                }))
             }
 
+            function transformAllResources (resourcesLists) {
+                resourcesLists = resourcesLists.reduce((previous, current) => previous.concat(current), [])
+                resourcesLists.forEach(d => d.originPage = page)
+                commit('setInfiniteScrollData', {page, data: resourcesLists})
+                return {hasMore: resourcesLists.length > 0}
+            }
+
+            const postsPromise = dispatch('fetch', {resource: 'posts', page})
+            const photosPromise = dispatch('fetch', {resource: 'photos', page})
+
             return Promise.all([
-                wrapWithAdditionalData(dispatch('fetchPosts', {page}), Post),
-                wrapWithAdditionalData(dispatch('fetchPhotos', {page}), Photo)
-            ]).then((data) => {
-                data = data.reduce((previous, current) => previous.concat(current), [])
-                data.forEach(d => d.originPage = page)
-                commit('setInfiniteScrollData', {page, data})
-                return {hasMore: data.length > 0}
-            })
+                postsPromise.then(dataList => transformResource(dataList, Post)),
+                photosPromise.then(dataList => transformResource(dataList, Photo))
+            ]).then(transformAllResources)
         },
-        fetchPosts (state, {page}){
+
+        // This methods should ideally be one for each resource
+        fetch ({state, commit}, {resource, page}){
+            const cache = checkAndGetIfCached(resource, state[resource], page)
+
+            if (cache) return cache
+
             return api.posts.get({page})
-        },
-        fetchPhotos (state, {page}){
-            return api.photos.get({page})
+                .then(data => {
+                    commit('setResource', {resource, data})
+                    return data
+                })
         }
     },
 
