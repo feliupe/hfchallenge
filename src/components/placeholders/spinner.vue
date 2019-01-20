@@ -15,7 +15,13 @@ export default {
 <style scoped>
 
 .spinner {
+    display: block;
     width: 30px;
+
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%)
 }
 
 </style>

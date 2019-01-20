@@ -2,7 +2,7 @@
 
 <div :class="[uniqueId, 'type-' + component.name]" class="InfiniteScrollItem">
 
-    <div class='uniqueIdContainer'>{{uniqueId}}</div>
+    <div v-if='!loading' class='uniqueIdContainer'>{{uniqueId}}</div>
 
     <component v-if='loading' :is='getPlaceholder(placeholder)'>Fetching data</component>
 

@@ -99,7 +99,7 @@ export default {
         },
         fetchPage (page) {
             this.loadingItems = true
-            return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 2000)
+            return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 19231238129)
                 .then(({hasMore}) => {
                     console.log('LOADED')
                     this.loadingItems = false
