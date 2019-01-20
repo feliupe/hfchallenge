@@ -110,10 +110,13 @@ export default {
 
 <style lang='scss'>
 
+@import url('assets/_global.scss');
+
 .data-feed {
 
     .type-Post {
-        height: 300px;
+        height: 200px;
+        padding: $default-padding;
     }
 
     .type-Photo {
@@ -125,8 +128,6 @@ export default {
 </style>
 
 <style scoped>
-
-@import url('assets/global.scss');
 
 .data-feed {
     max-width: 500px;

@@ -12,6 +12,10 @@ export default {
 
 <style scoped>
 
+/*
+    source: https://cloudcannon.com/deconstructions/2014/11/15/facebook-content-placeholder-deconstruction.html
+*/
+
 .animated-background {
     background: #fff;
     border: 1px solid;
@@ -20,7 +24,7 @@ export default {
 
     margin: 0 auto;
     max-width: 472px;
-    min-height: 200px;
+    min-height: 100%;
 }
 
 @keyframes placeHolderShimmer{

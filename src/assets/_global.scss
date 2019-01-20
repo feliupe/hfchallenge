@@ -1,0 +1,42 @@
+@import './reset.scss';
+@import './_vars.scss';
+
+html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  /* clearfix */
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/**
+* For IE 6/7 only
+* Include this rule to trigger hasLayout and contain floats.
+*/
+.clearfix {
+    *zoom: 1;
+}
+
+/* Font */
+
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 12px;
+}
+
+/* Elements */
+
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+}

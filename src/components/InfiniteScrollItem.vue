@@ -62,9 +62,8 @@ export default {
 <style scoped>
 
 .InfiniteScrollItem {
-    height: 300px; /* make various types */
-
     border: 1px red solid;
+    margin-bottom: 12px;
 }
 
 </style>
