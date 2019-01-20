@@ -4,7 +4,7 @@
 
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
-        :class="item['class']"
+        :classes="item['classes']"
 
         :key='index'
         :index='index'
@@ -54,7 +54,12 @@ export default {
     },
     computed: {
         scrollItems () {
-            // const loadingItems = Array(this.numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
+
+            /*
+                Aparently was a bad decision to split this two lists.
+                Would be nice to have only one where to distinguish I would only use
+                the the 'loading' property. This way I could pass the component
+             */
             return this.dataList.concat(this.loadingList.map(item => ({...item, loading: true})))
         }
     },

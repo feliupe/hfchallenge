@@ -20,6 +20,11 @@ const placeholdersByComponentName = {
     Post: 'animated-background'
 }
 
+const classesByComponentName = {
+    Post: ['type-post'],
+    Photo: ['type-photo']
+}
+
 const api = {
     posts: {
         get({page}) {
@@ -66,7 +71,8 @@ export default new Vuex.Store({
                 return dataList.map(data => ({
                     componentProps: data,
                     component,
-                    uniqueId: data.id + '-' + component.name
+                    uniqueId: data.id + '-' + component.name,
+                    // classes: classesByComponentName[componentName]
                 }))
             }
 
@@ -108,15 +114,17 @@ export default new Vuex.Store({
         },
         infiniteScrollLoadingData: (state) => () => {
 
-            function createComponentLoadingData (len, componentName) {
+            function createComponentLoadingData (len, component) {
                 return Array(len).fill({
-                    placeholder: placeholdersByComponentName[componentName]
+                    component,
+                    placeholder: placeholdersByComponentName[component.name],
+                    // classes: classesByComponentName[component.name]
                 })
             }
 
             return [
-                ...createComponentLoadingData(POSTS_CHUNK_SIZE, 'Post'),
-                ...createComponentLoadingData(PHOTOS_CHUNK_SIZE, 'Photo')
+                ...createComponentLoadingData(POSTS_CHUNK_SIZE, Post),
+                ...createComponentLoadingData(PHOTOS_CHUNK_SIZE, Photo)
             ]
         }
     }

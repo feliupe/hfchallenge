@@ -87,7 +87,7 @@ export default {
         },
         fetchPage (page) {
             this.loadingItems = true
-            return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 10000000)
+            return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 2000)
                 .then(({hasMore}) => {
                     console.log('LOADED')
                     this.loadingItems = false
@@ -101,6 +101,22 @@ export default {
 }
 </script>
 
+<style lang='scss'>
+
+.data-feed {
+
+    .type-Post {
+        height: 300px;
+    }
+
+    .type-Photo {
+        height: 200px;
+    }
+}
+
+
+</style>
+
 <style scoped>
 
 @import url('assets/global.scss');
@@ -112,7 +128,6 @@ export default {
 
     overflow-y: auto;
 }
-
 .exit-button {
     position: absolute;
     right: 12px;

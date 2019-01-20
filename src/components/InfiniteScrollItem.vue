@@ -1,6 +1,6 @@
 <template>
 
-<div :class='[uniqueId, typeSelector]' class="InfiniteScrollItem">
+<div :class="[uniqueId, 'type-' + component.name]" class="InfiniteScrollItem">
 
     <!-- <span>uniqueId {{uniqueId}}</span>unique content: {{componentProps.something}} -->
 
@@ -39,21 +39,15 @@ export default {
             type: String,
             default: 'spinner'
         },
-        type: {
-            type: String,
-            default: 'none'
+        classes: {
+            type: Array,
+            default: () => []
         }
     },
 
     data () {
         return {
             delayedLoading: true
-        }
-    },
-
-    computed: {
-        typeSelector () {
-            return 'type-' + this.component.name
         }
     },
 

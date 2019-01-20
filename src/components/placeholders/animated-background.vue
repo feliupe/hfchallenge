@@ -1,5 +1,5 @@
 <template>
-<div class="post-placehoder animated-background">
+<div class="animated-background animation">
 
 </div>
 </template>
@@ -12,12 +12,11 @@ export default {
 
 <style scoped>
 
-.post-placehoder {
+.animated-background {
     background: #fff;
     border: 1px solid;
     border-color: #e5e6e9 #dfe0e4 #d0d1d5;
     border-radius: 3px;
-    padding: 12px;
 
     margin: 0 auto;
     max-width: 472px;
@@ -33,7 +32,7 @@ export default {
     }
 }
 
-.animated-background {
+.animated-background.animation {
     animation-duration: 1s;
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
@@ -42,7 +41,7 @@ export default {
     background: #f6f7f8;
     background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
     background-size: 800px 104px;
-    height: 96px;
+    height: 100%;
     position: relative;
 }
 
