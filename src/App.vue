@@ -4,7 +4,6 @@
     <div class='debug-panel'>
         lastLoadedPage: {{lastLoadedPage}}
         scrollToItemId: {{scrollToItemId}}
-        numLoadingItems: {{numLoadingItems}}
         debug: {{debug}}
         hasMore: {{hasMore}}
     </div>
@@ -15,20 +14,25 @@
         ref='infiniteScroll'
         class='data-feed'
         :dataList='infiniteScrollData'
-        :numLoadingItems='numLoadingItems'
+        :loadingList='getLoadingData(loadingItems)'
         @onLastViewedItem='onLastViewedItem'
     />
 
 </div>
-</template>
+</template>getLoadingData
 
 <script>
 
 import {mapState} from 'vuex'
 
 import InfiniteScroll from '@/components/InfiniteScroll.vue'
+import { setTimeout } from 'timers';
 
 const NUM_OFF_ITEMS_TO_LOAD_MORE = 3
+
+function delay (cb, miliseconds) {
+    return new Promise(res => setTimeout(res, miliseconds)).then(cb)
+}
 
 export default {
     name: 'App',
@@ -36,7 +40,7 @@ export default {
     data () {
         return {
             count: 20,
-            numLoadingItems: 0,
+            loadingItems: false,
             lastLoadedPage: 0,
             scrollToItemId: -1,
             debug: '',
@@ -59,7 +63,6 @@ export default {
             window.location.href="https://fb.com"
         },
         onLastViewedItem (indexLastViewed) {
-            this.debug = 'fired'
 
             const closeToTheEdge = (this.infiniteScrollData.length - indexLastViewed) <= NUM_OFF_ITEMS_TO_LOAD_MORE
             console.log(
@@ -68,10 +71,8 @@ export default {
                 `closeToTheEdge ${closeToTheEdge}\n`,
                 `has more ${this.hasMore}\n`
             )
-            const notFetching = this.numLoadingItems === 0
 
-            if (closeToTheEdge && notFetching && this.hasMore) {
-                this.debug += 'fetching'
+            if (closeToTheEdge && this.loadingItems && this.hasMore) {
                 this.lastLoadedPage = this.lastLoadedPage + 1
                 console.error('FETCHING MORE')
                 this.fetchPage(this.lastLoadedPage)
@@ -85,12 +86,16 @@ export default {
             this.scrollToItemId = lastViewedItemId
         },
         fetchPage (page) {
-            this.numLoadingItems = this.ITEMS_CHUNK_SIZE
-            return this.$store.dispatch('fetchInfiniteScrollData', {page})
+            this.loadingItems = true
+            return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 10000000)
                 .then(({hasMore}) => {
-                    this.numLoadingItems = 0
+                    console.log('LOADED')
+                    this.loadingItems = false
                     this.hasMore = hasMore
                 })
+        },
+        getLoadingData(loadingItems) {
+            return this.loadingItems ? this.$store.getters.infiniteScrollLoadingData(this.ITEMS_CHUNK_SIZE) : []
         }
     }
 }

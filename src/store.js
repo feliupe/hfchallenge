@@ -16,38 +16,28 @@ const resourceChunkSizes = {
     posts: POSTS_CHUNK_SIZE
 }
 
-function delay (data) {
-    return new Promise(res => setTimeout(() => res(data), 1000 + (Math.random() * 4000)))
-}
-
-function getChunk (data, page, size) {
-    const start = page * size
-    data.forEach((v, i) => v.something = i + v.something)
-    return delay(data.slice(start, start + size))
-}
-
-function fakeData(len) {
-    return new Array(len).fill(0).map((_, i) => ({id: i, something: 'aduashd'}))
+const placeholdersByComponentName = {
+    Post: 'animated-background'
 }
 
 const api = {
     posts: {
         get({page}) {
-            // return getChunk(fakeData(30), page, POSTS_CHUNK_SIZE)
             return axios.get('http://jsonplaceholder.typicode.com/posts').then(r => r.data)
         }
     },
     photos: {
         get ({page}) {
-            return getChunk(fakeData(10), page, PHOTOS_CHUNK_SIZE).then(r => r.data)
+            return axios.get('http://jsonplaceholder.typicode.com/photos').then(r => r.data)
         }
     }
 }
 
 // dummy check: check last item is present
 function checkAndGetIfCached(resource, data, page) {
-    const lastItemIndex = resourceChunkSizes[resource] * (page + 1) - 1
-    return !!data[lastItemIndex]
+    const size = resourceChunkSizes[resource]
+    const start =  page * size
+    return data[start  + size - 1] ? data.slice(start, start + size) : false
 }
 
 export default new Vuex.Store({
@@ -102,10 +92,12 @@ export default new Vuex.Store({
 
             if (cache) return cache
 
-            return api.posts.get({page})
+            return api[resource].get({page})
                 .then(data => {
+                    const size = resourceChunkSizes[resource]
+                    const start = page * size
                     commit('setResource', {resource, data})
-                    return data
+                    return data.slice(start, start + size)
                 })
         }
     },
@@ -113,6 +105,19 @@ export default new Vuex.Store({
     getters: {
         infiniteScrollDataGetter: (state) => (page, count) => {
             return state.infiniteScrollData
+        },
+        infiniteScrollLoadingData: (state) => () => {
+
+            function createComponentLoadingData (len, componentName) {
+                return Array(len).fill({
+                    placeholder: placeholdersByComponentName[componentName]
+                })
+            }
+
+            return [
+                ...createComponentLoadingData(POSTS_CHUNK_SIZE, 'Post'),
+                ...createComponentLoadingData(PHOTOS_CHUNK_SIZE, 'Photo')
+            ]
         }
     }
 })

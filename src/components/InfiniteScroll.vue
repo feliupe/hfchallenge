@@ -4,12 +4,15 @@
 
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
+        :class="item['class']"
+
         :key='index'
         :index='index'
         :uniqueId='item.uniqueId'
         :component="item['component']"
         :componentProps="item['componentProps']"
         :loading="item['loading']"
+        :placeholder="item['placeholder']"
     />
 
 </div>
@@ -30,9 +33,9 @@ export default {
             type: Array,
             default: () => []
         },
-        numLoadingItems: {
-            type: Number,
-            default: 0
+        loadingList: {
+            type: Array,
+            default: () => () => []
         }
     },
     mounted () {
@@ -51,8 +54,8 @@ export default {
     },
     computed: {
         scrollItems () {
-            const loadingItems = Array(this.numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
-            return this.dataList.concat(loadingItems)
+            // const loadingItems = Array(this.numLoadingItems).fill(0).map(() => ({component: {}, loading: true}))
+            return this.dataList.concat(this.loadingList.map(item => ({...item, loading: true})))
         }
     },
     methods: {

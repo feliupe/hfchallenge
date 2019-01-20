@@ -1,16 +1,17 @@
 <template>
 <div class='Photo'>
 
-   <img src="https://via.placeholder.com/150/92c952" alt="A photo">
+   <img :src="thumbnailUrl" :alt="title">
 
-   <span>accusamus beatae ad facilis cum similique qui sunt</span>
+   <span>{{title}}</span>
 
 </div>
 </template>
 
 <script>
 export default {
-    name: 'Photo'
+    name: 'Photo',
+    props: ['thumbnailUrl', 'title']
 }
 </script>
 

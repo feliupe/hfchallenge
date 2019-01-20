@@ -1,10 +1,10 @@
 <template>
 
-<div :class='uniqueId' class="InfiniteScrollItem">
+<div :class='[uniqueId, typeSelector]' class="InfiniteScrollItem">
 
-    <span>uniqueId {{uniqueId}}</span>unique content: {{componentProps.something}}
+    <!-- <span>uniqueId {{uniqueId}}</span>unique content: {{componentProps.something}} -->
 
-    <template v-if='loading'>Fetching data</template>
+    <component v-if='loading' :is='getPlaceholder(placeholder)'>Fetching data</component>
 
     <component v-else :is='component' v-bind='componentProps'/>
 
@@ -34,6 +34,32 @@ export default {
         },
         index: {
             type: Number
+        },
+        placeholder: {
+            type: String,
+            default: 'spinner'
+        },
+        type: {
+            type: String,
+            default: 'none'
+        }
+    },
+
+    data () {
+        return {
+            delayedLoading: true
+        }
+    },
+
+    computed: {
+        typeSelector () {
+            return 'type-' + this.component.name
+        }
+    },
+
+    methods: {
+        getPlaceholder (placeholder) {
+            return require('@/components/placeholders/' + placeholder).default
         }
     }
 };
