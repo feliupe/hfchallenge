@@ -85,7 +85,7 @@ export default new Vuex.Store({
                     ...data,
                     componentProps: data,
                     component,
-                    uniqueId: data.id + '-' + component.name,
+                    uniqueId: component.name + '-' + data.id,
                 }))
             }
 

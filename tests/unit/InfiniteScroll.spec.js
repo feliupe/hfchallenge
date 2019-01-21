@@ -84,6 +84,7 @@ describe('InfiniteScroll.vue', () => {
             Here I've tried to:
             1 - check if I could scroll somehow, so that the item
             out of the view point would be emitted, but apparently
+
             scroll behavior is not fully implemented under the hood.
 
             infinite.vm.scrollToItem('id1')
