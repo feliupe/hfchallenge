@@ -34,7 +34,7 @@ export default {
         },
         loadingList: {
             type: Array,
-            default: () => () => []
+            default: () => []
         }
     },
     mounted () {

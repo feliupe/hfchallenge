@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InfiniteScroll.vue renders dataList and loadingList 1`] = `
+<div class="InfiniteScroll">
+  <div class="InfiniteScrollItem id1 type-GenericComponent">
+    <div class="uniqueIdContainer">id1</div>
+    <div>Rendered!</div>
+  </div>
+  <div class="InfiniteScrollItem id2 type-loading">
+    <!----> <img src="https://loading.io/spinners/rolling/lg.curve-bars-loading-indicator.gif" alt="" class="spinner"></div>
+</div>
+`;

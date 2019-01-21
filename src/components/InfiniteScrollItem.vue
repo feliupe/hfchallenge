@@ -1,6 +1,6 @@
 <template>
 
-<div :class="[uniqueId, 'type-' + component.name]" class="InfiniteScrollItem">
+<div :class="[uniqueId, typeClass]" class="InfiniteScrollItem">
 
     <div v-if='!loading' class='uniqueIdContainer'>{{uniqueId}}</div>
 
@@ -22,7 +22,7 @@ export default {
         },
         component: {
             type: Object,
-            default: () => null // maybe check here if is a vue component
+            default: () => ({}) // maybe check here if is a vue component
         },
         componentProps: {
             type: Object,
@@ -44,6 +44,13 @@ export default {
     data () {
         return {
             delayedLoading: true
+        }
+    },
+
+    computed: {
+        typeClass () {
+            const componentName = this.loading ? 'loading' : this.component.name
+            return `type-${componentName}`
         }
     },
 
