@@ -50,7 +50,7 @@ export default {
     computed: {
         classes () {
             return {
-                uniqueId: true,
+                [this.uniqueId]: true,
                 'type-loading': this.loading,
                 ['type-' + this.component.name]: true
             }
