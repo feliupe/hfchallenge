@@ -123,22 +123,18 @@ export default new Vuex.Store({
 
     getters: {
         infiniteScrollDataGetter: (state) => (page, count) => {
-
             // TODO: move transform functions here and remove the state
             // Maybe create getters for each scroll type of item like:
             // - scrollPostGetter (page) - join posts and comments
             // - scrollPhotogetter (page)...
             // For now I will join the post comments here.
-            const res = state.infiniteScrollData
+            return state.infiniteScrollData
                 .map(data => {
                     const componentProps = {...data.componentProps, comments: state.commentsByPostId[data.id]}
                     return data.component.name === 'Post' ?
                         {...data, componentProps} :
                         data
                 })
-
-            debugger
-            return res
         },
         infiniteScrollLoadingData: (state) => () => {
 

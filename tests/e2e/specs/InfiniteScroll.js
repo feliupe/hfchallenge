@@ -6,7 +6,9 @@
 const ITEMS_CHUNK_SIZE = 6
 
 // The exact same function exist on `InfiniteScroll.vue`
-// but it's important that the code is not reused.
+// but it's important that the code is not reused, so
+// that changes in the app logic don't affect
+// the test assertion capabilities.
 function isInViewPoint (el, document, window) {
     const bounding = el.getBoundingClientRect()
 
@@ -53,18 +55,17 @@ describe('Test InfiniteScroll', () => {
     })
 
     it('last visible item should be visible after refresh', function () {
-
         cy.visit('/')
 
         waitAndAssertItemsLoading(ITEMS_CHUNK_SIZE, ITEMS_CHUNK_SIZE)
 
         cy.get('.InfiniteScroll')
-        .scrollTo('bottom')
+            .scrollTo('bottom')
 
         waitAndAssertItemsLoading(ITEMS_CHUNK_SIZE, ITEMS_CHUNK_SIZE * 2)
 
         cy.get('.InfiniteScroll')
-        .scrollTo('bottom')
+            .scrollTo('bottom')
 
         cy.wait(2000) // wait 'scroll' throttling
 
@@ -72,6 +73,7 @@ describe('Test InfiniteScroll', () => {
         cy.window().as('window')
         cy.document().as('document')
 
+        // find last visible item
         cy.get('.InfiniteScrollItem:not(.type-loading)')
             .then(function ($items) {
                 var $last
@@ -80,7 +82,7 @@ describe('Test InfiniteScroll', () => {
                         $last = $item
                     }
                 }
-                cy.wrap('.' + $last.className.split(' ').join('.')).as('nextPageItemSelector')
+                cy.wrap('.' + $last.className.split(' ').join('.')).as('lastVIsibleItem')
             })
 
         // move away
@@ -90,11 +92,11 @@ describe('Test InfiniteScroll', () => {
 
         waitAndAssertItemsLoading(ITEMS_CHUNK_SIZE, ITEMS_CHUNK_SIZE)
 
-        cy.get('@nextPageItemSelector')
-            .then(nextPageItemSelector => cy.get(nextPageItemSelector))
+        cy.get('@lastVIsibleItem')
+            .then(lastVIsibleItem => cy.get(lastVIsibleItem))
             .then($selectorResult=> {
-                const visible = isInViewPoint($selectorResult[0], this.document, this.window)
-                cy.wrap(visible).should('be.equal', true)
+                const isVisible = isInViewPoint($selectorResult[0], this.document, this.window)
+                cy.wrap(isVisible).should('be.equal', true)
             })
 
     })

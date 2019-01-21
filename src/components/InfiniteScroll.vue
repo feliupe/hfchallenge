@@ -40,16 +40,12 @@ export default {
     mounted () {
         // TODO: work more on this to make the loading more smooth/pleasant
         this.$el.addEventListener('scroll', throttle((event) => {
-            console.log('scrolling')
             var last
             for (var item of this.$children) {
                 if (this.isInViewPoint(item.$el)) {
                     last = item
                 }
             }
-
-            console.log(last.index)
-
             if (last && !last.loading) { this.$emit('onLastViewedItem', last.index) }
         }, 1000, {'leading': false}), false)
     },
@@ -72,7 +68,6 @@ export default {
                return
             }
             el[0].scrollIntoView({behavior: "smooth", block: "start"})
-            console.log('scrolling into item')
         },
         isInViewPoint (el) {
             const bounding = el.getBoundingClientRect()

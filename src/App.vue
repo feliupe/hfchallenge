@@ -56,7 +56,9 @@ export default {
         ]).then(() => {
             this.lastLoadedPage = parseInt(localStorage.getItem('pageLastViewedInfiniteScrollItem')) || 0
             this.scrollToItemId = localStorage.getItem('lastViewedInfiniteScrollItem')
-            this.fetchPage(this.lastLoadedPage).then(() => this.$refs.infiniteScroll.scrollToItem(this.scrollToItemId))
+            this.fetchPage(this.lastLoadedPage).then(() => {
+                this.$refs.infiniteScroll.scrollToItem(this.scrollToItemId)
+            })
         })
     },
     computed: {
@@ -75,18 +77,11 @@ export default {
             window.location.href="https://fb.com"
         },
         onLastViewedItem (indexLastViewed) {
-
-            const closeToTheEdge = (this.infiniteScrollData.length - indexLastViewed) <= NUM_OFF_ITEMS_TO_LOAD_MORE
-            console.log(
-                `this.infiniteScrollData.length ${this.infiniteScrollData.length}\n`,
-                `indexLastViewed ${indexLastViewed}\n`,
-                `closeToTheEdge ${closeToTheEdge}\n`,
-                `has more ${this.hasMore}\n` + this.loadingItems
-            )
+            const remainingItems = this.infiniteScrollData.length - indexLastViewed
+            const closeToTheEdge = remainingItems <= NUM_OFF_ITEMS_TO_LOAD_MORE
 
             if (closeToTheEdge && !this.loadingItems && this.hasMore) {
                 this.lastLoadedPage = this.lastLoadedPage + 1
-                console.error('FETCHING MORE')
                 this.fetchPage(this.lastLoadedPage)
             }
 
@@ -99,9 +94,10 @@ export default {
         },
         fetchPage (page) {
             this.loadingItems = true
+
+            // simulate loading
             return delay(() => this.$store.dispatch('fetchInfiniteScrollData', {page}), 2000)
                 .then(({hasMore}) => {
-                    console.log('LOADED')
                     this.loadingItems = false
                     this.hasMore = hasMore
                 })
