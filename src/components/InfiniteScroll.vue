@@ -48,6 +48,8 @@ export default {
                 }
             }
 
+            console.log(last.index)
+
             if (last && !last.loading) { this.$emit('onLastViewedItem', last.index) }
         }, 1000, {'leading': false}), false)
     },
@@ -74,6 +76,7 @@ export default {
         },
         isInViewPoint (el) {
             const bounding = el.getBoundingClientRect()
+
             return (
                 bounding.top >= 0 &&
                 bounding.left >= 0 &&
