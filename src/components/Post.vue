@@ -36,7 +36,7 @@ $thumb-width: 128px;
 .description {
     position: relative;
 
-    width:  calc(100% - #{$thumb-width});
+    width:  calc(100% - #{$thumb-width} - 30px);
     padding: calc(#{$default-padding} / 2);
 }
 
@@ -59,7 +59,7 @@ $thumb-width: 128px;
 .comments-section {
     position: absolute;
     text-align: right;
-    bottom: 6px;
+    bottom: 30px; // for some reason '.description' is higher than '.thumb' so ajusted manually
     right: 12px;
 }
 

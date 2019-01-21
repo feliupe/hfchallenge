@@ -1,6 +1,6 @@
 <template>
 
-<div :class="[uniqueId, typeClass]" class="InfiniteScrollItem">
+<div :class="classes" class="InfiniteScrollItem">
 
     <div v-if='!loading' class='uniqueIdContainer'>{{uniqueId}}</div>
 
@@ -48,9 +48,12 @@ export default {
     },
 
     computed: {
-        typeClass () {
-            const componentName = this.loading ? 'loading' : this.component.name
-            return `type-${componentName}`
+        classes () {
+            return {
+                uniqueId: true,
+                'type-loading': this.loading,
+                ['type-' + this.component.name]: true
+            }
         }
     },
 
@@ -68,13 +71,13 @@ export default {
     position: relative;
     margin-bottom: 12px;
     box-shadow: -9px 10px 19px 1px #7f3f42;
+    height: 200px;
 }
 
 .uniqueIdContainer {
     position: absolute;
-    left: 65px;
-    /* transform: translateY(100%); */
-    top: 77px;
+    left: 69px;
+    top: 87px;
     box-shadow: -8px 7px rgba(15, 41, 22, 0.68);
     background-color: white;
     padding: 10px;

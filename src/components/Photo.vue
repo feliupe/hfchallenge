@@ -27,7 +27,7 @@ $image-width: 150px;
 }
 
 .title {
-    width: calc(100% - #{$image-width});
+    width: calc(100% - #{$image-width} - 100px); // 100px for fixing last minute layout mess
     padding: 36px 12px 12px 36px;
 
     /* font */
