@@ -82,5 +82,7 @@ In general, I am satisfied with the result.
 
 ## TODO:
 
+- make it work with all the other endpoints: I've been very busy these days. But let me know. I would need more time in
+case you would like to see more.
 - load items on scrolling up
 - create policy to invalidate scrolling back to last viewed item?
