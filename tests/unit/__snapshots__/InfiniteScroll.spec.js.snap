@@ -6,7 +6,7 @@ exports[`InfiniteScroll.vue renders dataList and loadingList 1`] = `
     <div class="uniqueIdContainer">id1</div>
     <div class="GenericComponent" style="height: 100px; width: 100px;">id1 rendered!</div>
   </div>
-  <div class="InfiniteScrollItem id2 type-loading">
+  <div class="InfiniteScrollItem id2 type-loading type-GenericComponent">
     <!----> <img src="https://loading.io/spinners/rolling/lg.curve-bars-loading-indicator.gif" alt="" class="spinner"></div>
 </div>
 `;

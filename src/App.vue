@@ -134,8 +134,6 @@ export default {
 .data-feed {
     max-width: 500px;
     height: 100vh;
-
-    overflow-y: auto;
 }
 
 .exit-button {

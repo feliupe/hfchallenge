@@ -86,6 +86,7 @@ export default {
 
 .InfiniteScroll {
     padding: 0 12px;
+    overflow-y: auto;
 }
 
 </style>
