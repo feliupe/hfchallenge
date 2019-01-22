@@ -39,7 +39,7 @@ export default {
     },
     mounted () {
         // TODO: work more on this to make the loading more smooth/pleasant
-        this.$el.addEventListener('scroll', throttle((event) => {
+        this.$el.addEventListener('scroll', throttle(() => {
             var last
             for (var item of this.$children) {
                 if (this.isInViewPoint(item.$el)) {

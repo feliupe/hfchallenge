@@ -22,12 +22,12 @@ const placeholdersByComponentName = {
 
 const api = {
     posts: {
-        get({page}) {
+        get() {
             return axios.get('http://jsonplaceholder.typicode.com/posts').then(r => r.data)
         }
     },
     photos: {
-        get ({page}) {
+        get () {
             return axios.get('http://jsonplaceholder.typicode.com/photos').then(r => r.data)
         }
     },
@@ -75,10 +75,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        fetchAllComments ({state, commit}) {
+        fetchAllComments ({commit}) {
             return api.comments.get().then(comments => commit('setCommentsByPostId', {comments}))
         },
-        fetchInfiniteScrollData ({state, commit, dispatch}, {page}) {
+        fetchInfiniteScrollData ({commit, dispatch}, {page}) {
 
             function transformResource (dataList, component) {
                 return dataList.map(data => ({
@@ -122,7 +122,7 @@ export default new Vuex.Store({
     },
 
     getters: {
-        infiniteScrollDataGetter: (state) => (page, count) => {
+        infiniteScrollDataGetter: (state) => () => {
             // TODO: move transform functions here and remove the state
             // Maybe create getters for each scroll type of item like:
             // - scrollPostGetter (page) - join posts and comments
@@ -136,13 +136,12 @@ export default new Vuex.Store({
                         data
                 })
         },
-        infiniteScrollLoadingData: (state) => () => {
+        infiniteScrollLoadingData: () => () => {
 
             function createComponentLoadingData (len, component) {
                 return Array(len).fill({
                     component,
-                    placeholder: placeholdersByComponentName[component.name],
-                    // classes: classesByComponentName[component.name]
+                    placeholder: placeholdersByComponentName[component.name]
                 })
             }
 
