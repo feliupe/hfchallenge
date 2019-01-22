@@ -2,6 +2,9 @@
 
 <div class="InfiniteScroll">
 
+    <!-- Reasigning properties with the same name was on purpose here -->
+    <!-- so that is clear what you're passing down to the component -->
+    <!-- An idea to avoid would be to use something like v-bind='InfiniteScrollItemModel' -->
     <infinite-scroll-item
         v-for='(item, index) in scrollItems'
 
