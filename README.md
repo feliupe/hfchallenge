@@ -81,3 +81,8 @@ only to make have a acceptable look and feel. Right now, I would need more time
 and thinking to make it more robust.
 
 In general, I am satisfied with the result.
+
+## TODO:
+
+- load items on scrolling up
+- create policy to invalidate scrolling back to last viewed item?
