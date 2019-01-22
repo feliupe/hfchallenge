@@ -27,11 +27,11 @@ Standard store pattern, fetching data with Actions, storing on the State
 and getting transformed through Getters.
 
 Note1: I've created `state.infiniteScrollData` to hold the infinite
-scroll data but later on I realised that would be better - more organized -
-to have a getters for each resource like I describe on `store.js` line 125.
+scroll data but later on I realized that would be better (more organized)
+to have getters for each resource, like I describe on `store.js` line 125.
 
 Going beyond organization, I think the less duplicated the data is,
-the easier is to manage updates of the same resource (user, phost, photo)
+the easier is to manage updates of the same resource (user, posts, photos)
 across the application.
 
 Note2: I would also split the store into multiple modules, like 'posts', with
@@ -43,10 +43,8 @@ as well, as they might mutate different 'state' in different ways.
 
 - InfiniteScroll.vue
 
-I think this component could encapsulate more behavior, like saving last viewed
-page and item and also fetch the data, through a function passed as parameter.
-
-It would be way more easy to reuse it.
+I think this component could encapsulate more behavior from App.vue, like saving last viewed
+page and item and also fetching the data, through a function passed as parameter. It would be way more easy to reuse it.
 
 I would also have only one dataList, like describe in the line 56.
 
@@ -55,8 +53,8 @@ I would also have only one dataList, like describe in the line 56.
 Here I thought I could test pretty much everything, the basic
 rendering, that I could do, and its basic behavior, but had problems with the scrolling.
 
-If is not possible to test it without launching a browser, I would should a page
-in the application, where I could throuly test it, but mocking the api calls -
+If is not possible to test it without launching a browser, I would choose a page
+in the application where the component is used and I could thoroughly test it by mocking the api calls -
 as it is very easy in cypress.
 
 - Store
@@ -67,15 +65,15 @@ throughout the application.
 ### How would you e2e test this?
 
 The approach here would be to test it integrated with other components, simulating
-the critical application use cases.
+the critical application use cases and testing against the real api.
 
-As I couldn't make the scroll behavior work in the unit test I tested the component here.
-I would also here, as mentioned before, mock the api requets, to avoid the hassle of spinning
+As I couldn't make the scroll behavior work in the unit test, I tested it here (e2e).
+I would also, as mentioned before, mock the api requests, to avoid the hassle of spinning
 up a server.
 
 ## Conclusion
 
-Probably it could've be done better, speacially regarding css. I've put a few
+Probably it could've be done better, specially regarding css. I've put a few
 arbitrary values in paddings, margins and widths, what I don't like. But it was
 only to make have a acceptable look and feel. Right now, I would need more time
 and thinking to make it more robust.
